@@ -19,8 +19,8 @@ defmodule Knagaroo.Storage.MemoryTest do
       assert MemoryStorage.get(storage, "foo") == {:ok, "bar"}
     end
 
-    test "set returns ok if everything when ok", %{storage: storage} do
-      assert MemoryStorage.set(storage, "foo", "bar") == :ok
+    test "set returns ok and key if everything when ok", %{storage: storage} do
+      assert MemoryStorage.set(storage, "foo", "bar") == {:ok, "foo"}
     end
 
     test "set overrides existing value", %{storage: storage} do

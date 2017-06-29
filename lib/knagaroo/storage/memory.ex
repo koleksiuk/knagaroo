@@ -1,13 +1,13 @@
 defmodule Knagaroo.Storage.Memory do
   use GenServer
-
+  #
   # === Public API
   @doc """
     Starts Memory storage
   """
   @spec start_link() :: pid
-  def start_link do
-    GenServer.start_link(__MODULE__, :ok, [])
+  def start_link() do
+    GenServer.start_link(__MODULE__, [], [])
   end
 
   @doc """
@@ -15,20 +15,20 @@ defmodule Knagaroo.Storage.Memory do
   """
   @spec get(pid, String.t) :: nil
   @spec get(pid, String.t) :: {:ok, String.t}
-  def get(storage, key) do
-    GenServer.call(storage, {:get, key})
+  def get(storage_pid, key) do
+    GenServer.call(storage_pid, {:get, key})
   end
 
   @doc """
     Binds given key in a storage to a value
   """
   @spec set(pid, String.t, String.t) :: {:ok, String.t}
-  def set(storage, key, value) do
-    GenServer.call(storage, {:set, key, value})
+  def set(storage_pid, key, value) do
+    GenServer.call(storage_pid, {:set, key, value})
   end
 
   # === Private API
-  def init(:ok) do
+  def init([]) do
     {:ok, Map.new}
   end
 
@@ -41,6 +41,6 @@ defmodule Knagaroo.Storage.Memory do
   end
 
   def handle_call({:set, key, value}, _from, state) do
-    {:reply, :ok, Map.put(state, key, value)}
+    {:reply, {:ok, key}, Map.put(state, key, value)}
   end
 end
